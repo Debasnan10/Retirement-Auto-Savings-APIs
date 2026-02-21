@@ -1,0 +1,45 @@
+# Docker Compose for Retirement Auto-Savings API
+# Usage:  docker compose up -d
+# Build:  docker compose build
+
+services:
+
+  # ── PostgreSQL ────────────────────────────────────────────────────────
+  db:
+    image: postgres:16-alpine
+    container_name: retirement-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: retirement_savings
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── API Server ────────────────────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: blk-hacking-ind-debasnan-singh
+    container_name: retirement-api
+    restart: unless-stopped
+    ports:
+      - "5477:5477"
+    environment:
+      APP_HOST: 0.0.0.0
+      APP_PORT: 5477
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@db:5432/retirement_savings
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
