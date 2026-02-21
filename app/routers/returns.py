@@ -35,10 +35,7 @@ from app.utils.helpers import normalise_datetime_str, round_currency
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(
-    prefix="/blackrock/challenge/v1",
-    tags=["Returns"],
-)
+router = APIRouter(prefix="/blackrock/challenge/v1")
 
 
 # ── Shared pipeline ──────────────────────────────────────────────────────
@@ -136,6 +133,7 @@ def _build_returns(
     "/returns:nps",
     response_model=ReturnsResponse,
     summary="Calculate NPS (National Pension Scheme) investment returns",
+    tags=["Returns"],
 )
 async def returns_nps(body: ReturnsRequest) -> ReturnsResponse:
     """Calculate retirement returns using NPS at 7.11 % compounded annually.
@@ -154,6 +152,7 @@ async def returns_nps(body: ReturnsRequest) -> ReturnsResponse:
     "/returns:index",
     response_model=ReturnsResponse,
     summary="Calculate Index Fund (NIFTY 50) investment returns",
+    tags=["Returns"],
 )
 async def returns_index(body: ReturnsRequest) -> ReturnsResponse:
     """Calculate returns using NIFTY 50 index fund at 14.49 % compounded
