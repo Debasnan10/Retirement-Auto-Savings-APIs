@@ -178,7 +178,7 @@ Returns uptime, memory usage, and thread count.
 
 ### 7. Monte Carlo Simulation — `POST /returns:simulate` 🆕
 
-**Innovation feature.** Runs 100–10,000 randomised market scenarios varying interest rates (±2%) and inflation (±1.5%) to project a **range** of retirement outcomes instead of a single deterministic number.
+**Additional Features.** Runs 100–10,000 randomised market scenarios varying interest rates (±2%) and inflation (±1.5%) to project a **range** of retirement outcomes instead of a single deterministic number.
 
 ```json
 {

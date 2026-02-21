@@ -359,7 +359,7 @@ async def test_malformed_json_returns_422(client):
 
 
 # ══════════════════════════════════════════════════════════════════════════
-# 9.  POST /returns:simulate  (Innovation — Monte Carlo)
+# 9.  POST /returns:simulate  (Additional Features — Monte Carlo)
 # ══════════════════════════════════════════════════════════════════════════
 
 SIMULATE_BODY = {
@@ -426,7 +426,7 @@ async def test_simulate_median_profits_present(client):
 
 
 # ══════════════════════════════════════════════════════════════════════════
-# 10.  POST /returns:score  (Innovation — Readiness Score)
+# 10.  POST /returns:score  (Additional Features — Readiness Score)
 # ══════════════════════════════════════════════════════════════════════════
 
 SCORE_BODY = {

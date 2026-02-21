@@ -195,8 +195,8 @@ def _compute_principal(body) -> float:
 @router.post(
     "/returns:simulate",
     response_model=SimulateResponse,
-    summary="Monte Carlo retirement simulation (innovation feature)",
-    tags=["Innovation"],
+    summary="Monte Carlo retirement simulation (additional feature)",
+    tags=["Additional Features"],
 )
 async def returns_simulate(body: SimulateRequest) -> SimulateResponse:
     """Run randomised market scenarios to project a **range** of retirement
@@ -229,8 +229,8 @@ async def returns_simulate(body: SimulateRequest) -> SimulateResponse:
 @router.post(
     "/returns:score",
     response_model=ScoreResponse,
-    summary="Retirement readiness score 0–100 (innovation feature)",
-    tags=["Innovation"],
+    summary="Retirement readiness score 0–100 (additional feature)",
+    tags=["Additional Features"],
 )
 async def returns_score(body: ScoreRequest) -> ScoreResponse:
     """Compute a single **0–100 retirement readiness score** with letter
