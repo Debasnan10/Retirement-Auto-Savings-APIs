@@ -6,10 +6,8 @@
 """
 
 from __future__ import annotations
-
 import logging
 from typing import Callable, Dict, List
-
 from fastapi import APIRouter, HTTPException
 
 from app.models.schemas import (
@@ -149,7 +147,6 @@ async def returns_nps(body: ReturnsRequest) -> ReturnsResponse:
         return _build_returns(body, calculate_nps_return, is_nps=True)
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc))
-
 
 # ── Index Fund endpoint ──────────────────────────────────────────────────
 

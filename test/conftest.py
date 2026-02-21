@@ -1,6 +1,6 @@
 # Test type: Configuration
 # Validation to be executed: Shared fixtures for all test modules
-# Command: pytest test/ -v (this file is auto-loaded by pytest)
+# Command: pytest test/ -v
 
 """Shared pytest fixtures for the Retirement Auto-Savings API test suite."""
 

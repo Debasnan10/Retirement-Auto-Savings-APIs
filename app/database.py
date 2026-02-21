@@ -6,7 +6,6 @@ the performance endpoint.
 """
 
 from __future__ import annotations
-
 import logging
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
@@ -22,7 +21,7 @@ from app.config import settings
 logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
-# Engine & session factory (created lazily on first use)
+# Engine & session factory
 # ---------------------------------------------------------------------------
 _engine = None
 _async_session_factory = None
@@ -47,7 +46,6 @@ async def init_db() -> None:
             expire_on_commit=False,
         )
 
-        # Attempt a connection to verify DB is reachable
         async with _engine.begin() as conn:
             from app.models.db_models import Base
             await conn.run_sync(Base.metadata.create_all)
@@ -73,7 +71,6 @@ async def close_db() -> None:
 
 def is_db_available() -> bool:
     return _db_available
-
 
 @asynccontextmanager
 async def get_session() -> AsyncGenerator[AsyncSession | None, None]:

@@ -7,15 +7,12 @@ Usage:
 """
 
 from __future__ import annotations
-
 import logging
 import time
 from contextlib import asynccontextmanager
-
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-
 from app.config import settings
 from app.database import close_db, get_session, init_db
 from app.models.db_models import PerformanceLog
@@ -29,9 +26,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-
 # ── Lifespan (startup + shutdown) ────────────────────────────────────────
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("Starting Retirement Auto-Savings API on port %s …", settings.APP_PORT)
@@ -41,9 +36,7 @@ async def lifespan(app: FastAPI):
     await close_db()
     logger.info("Application shutdown complete.")
 
-
 # ── Application factory ──────────────────────────────────────────────────
-
 app = FastAPI(
     title="Retirement Auto-Savings API",
     description=(
@@ -65,9 +58,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 # ── Request-level timing & performance logging middleware ─────────────────
-
 @app.middleware("http")
 async def timing_middleware(request: Request, call_next):
     start = time.perf_counter()
@@ -102,9 +93,7 @@ async def timing_middleware(request: Request, call_next):
 
     return response
 
-
 # ── Global exception handler ─────────────────────────────────────────────
-
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
     logger.error("Unhandled exception on %s: %s", request.url.path, exc, exc_info=True)
@@ -113,22 +102,18 @@ async def global_exception_handler(request: Request, exc: Exception):
         content={"detail": "Internal server error. Please check the logs."},
     )
 
-
 # ── Register routers ─────────────────────────────────────────────────────
 app.include_router(transactions.router)
 app.include_router(returns.router)
 app.include_router(performance.router)
 
-
 # ── Health check ──────────────────────────────────────────────────────────
-
 @app.get("/health", tags=["Health"])
 async def health_check():
     return {"status": "healthy", "port": settings.APP_PORT}
 
 
 # ── Dev entry point ──────────────────────────────────────────────────────
-
 if __name__ == "__main__":
     import uvicorn
 

@@ -58,7 +58,6 @@ class TestQPeriodOverride:
         adjusted = apply_temporal_adjustments(txns, q, [])
         assert adjusted[0].remanent == 100  # first in list wins on tie
 
-
 # ── p period tests ────────────────────────────────────────────────────────
 
 class TestPPeriodAddition:

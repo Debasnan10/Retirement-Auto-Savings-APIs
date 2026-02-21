@@ -11,11 +11,9 @@ t = 60 − age   if age < 60, else 5.
 """
 
 from __future__ import annotations
-
 from app.config import settings
 from app.services.tax_service import calculate_tax_benefit
 from app.utils.helpers import round_currency
-
 
 def _investment_years(age: int) -> int:
     """Number of years the investment compounds."""
@@ -23,18 +21,15 @@ def _investment_years(age: int) -> int:
         return settings.RETIREMENT_AGE - age
     return settings.MIN_INVESTMENT_YEARS
 
-
 def compound_interest(principal: float, rate: float, years: int) -> float:
     """A = P × (1 + r)^t  (compounded annually, n=1)."""
     return principal * ((1 + rate) ** years)
-
 
 def adjust_for_inflation(amount: float, inflation: float, years: int) -> float:
     """A_real = A / (1 + inflation)^t."""
     if inflation <= 0 or years <= 0:
         return amount
     return amount / ((1 + inflation) ** years)
-
 
 # ── Public API ────────────────────────────────────────────────────────────
 
@@ -61,7 +56,6 @@ def calculate_nps_return(
         "taxBenefit": round_currency(tax_benefit),
     }
 
-
 def calculate_index_return(
     principal: float,
     age: int,
@@ -82,7 +76,6 @@ def calculate_index_return(
         "profits": profits,
         "taxBenefit": 0.0,
     }
-
 
 # ── Monte Carlo simulation ────────────────────────────────────────────────
 
@@ -158,7 +151,6 @@ def monte_carlo_simulate(
             "index": round_currency(median_idx - principal),
         },
     }
-
 
 # ── Retirement Readiness Score ────────────────────────────────────────────
 

@@ -260,8 +260,6 @@ async def test_nps_returns_challenge(client):
     k2 = data["savingsByDates"][1]
     assert k2["profits"] > k1["profits"]  # larger principal → larger profits
     assert k2["taxBenefit"] >= 0.0
-    # Exact NPS values verified in test_integration_pipeline.py
-
 
 async def test_nps_returns_empty_transactions(client):
     """NPS with no transactions → empty savings."""
@@ -276,7 +274,6 @@ async def test_nps_returns_empty_transactions(client):
 # 6.  POST /returns:index
 # ══════════════════════════════════════════════════════════════════════════
 
-
 async def test_index_returns_challenge(client):
     """Index returns using the full challenge payload."""
     resp = await client.post(f"{BASE}/returns:index", json=RETURNS_BODY)
@@ -287,8 +284,8 @@ async def test_index_returns_challenge(client):
 
     # Index profits for k1 should be much larger than NPS
     k1 = data["savingsByDates"][0]
-    assert k1["profits"] > 100  # expected ~1684
-    assert k1["taxBenefit"] == 0.0  # index has no tax benefit
+    assert k1["profits"] > 100
+    assert k1["taxBenefit"] == 0.0
 
 
 async def test_index_returns_empty(client):
@@ -298,11 +295,9 @@ async def test_index_returns_empty(client):
     assert resp.status_code == 200
     assert resp.json()["savingsByDates"] == []
 
-
 # ══════════════════════════════════════════════════════════════════════════
 # 7.  GET /performance
 # ══════════════════════════════════════════════════════════════════════════
-
 
 async def test_performance_endpoint(client):
     """Performance endpoint returns valid metrics."""
@@ -314,10 +309,8 @@ async def test_performance_endpoint(client):
     assert "memory" in data
     assert "threads" in data
 
-    # Memory should be in "XX.XX MB" format
     assert "MB" in data["memory"]
 
-    # Threads ≥ 1
     assert data["threads"] >= 1
 
 
@@ -327,14 +320,12 @@ async def test_performance_time_format(client):
     data = resp.json()
     time_str = data["time"]
     parts = time_str.split(":")
-    assert len(parts) == 3  # HH:mm:ss.SSS
-    assert "." in parts[2]  # ss.SSS
-
+    assert len(parts) == 3 
+    assert "." in parts[2]
 
 # ══════════════════════════════════════════════════════════════════════════
 # 8.  Cross-cutting / Error handling
 # ══════════════════════════════════════════════════════════════════════════
-
 
 async def test_unknown_route_returns_404(client):
     """Non-existent route gives 404."""
@@ -356,7 +347,6 @@ async def test_malformed_json_returns_422(client):
         headers={"Content-Type": "application/json"},
     )
     assert resp.status_code == 422
-
 
 # ══════════════════════════════════════════════════════════════════════════
 # 9.  POST /returns:simulate  (Additional Features — Monte Carlo)
@@ -423,7 +413,6 @@ async def test_simulate_median_profits_present(client):
     data = resp.json()
     assert "nps" in data["medianProfits"]
     assert "index" in data["medianProfits"]
-
 
 # ══════════════════════════════════════════════════════════════════════════
 # 10.  POST /returns:score  (Additional Features — Readiness Score)

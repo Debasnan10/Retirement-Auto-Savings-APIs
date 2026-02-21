@@ -5,10 +5,8 @@
 """
 
 from __future__ import annotations
-
 import math
 from typing import List, Tuple
-
 from app.config import settings
 from app.models.schemas import (
     Expense,
@@ -48,7 +46,6 @@ def parse_expenses(expenses: List[Expense]) -> List[Transaction]:
             )
         )
     return transactions
-
 
 # ── 2. Validate ───────────────────────────────────────────────────────────
 

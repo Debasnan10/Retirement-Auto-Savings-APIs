@@ -9,7 +9,6 @@ Tax Slabs (Simplified):
 """
 
 from __future__ import annotations
-
 from app.config import settings
 from app.utils.helpers import round_currency
 
@@ -22,7 +21,6 @@ _SLABS: list[tuple[float, float, float]] = [
     (1_200_000.0, 1_500_000.0, 0.20),
     (1_500_000.0, float("inf"), 0.30),
 ]
-
 
 def calculate_tax(taxable_income: float) -> float:
     """Compute tax using simplified Indian slabs.
@@ -49,7 +47,6 @@ def calculate_tax(taxable_income: float) -> float:
 
     return round_currency(tax)
 
-
 def calculate_nps_deduction(invested: float, annual_income: float) -> float:
     """Eligible NPS deduction = min(invested, 10 % of annual income, ₹2 L)."""
     return min(
@@ -57,7 +54,6 @@ def calculate_nps_deduction(invested: float, annual_income: float) -> float:
         settings.NPS_DEDUCTION_PERCENT * annual_income,
         settings.NPS_MAX_DEDUCTION,
     )
-
 
 def calculate_tax_benefit(annual_income: float, invested: float) -> float:
     """Tax benefit = Tax(income) − Tax(income − NPS_Deduction).

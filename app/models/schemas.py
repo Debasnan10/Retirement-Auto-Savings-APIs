@@ -6,19 +6,13 @@ Naming follows the challenge spec:
 """
 
 from __future__ import annotations
-
 from typing import List, Optional
-
 from pydantic import BaseModel, Field, model_validator
-
-
-# ── Shared primitives ─────────────────────────────────────────────────────
 
 class Expense(BaseModel):
     """A single raw expense as received from the client."""
     timestamp: str = Field(..., description="Date-time string (YYYY-MM-DD HH:mm:ss or YYYY-MM-DD HH:mm)")
     amount: float = Field(..., description="Expense amount in INR")
-
 
 class Transaction(BaseModel):
     """Enriched transaction after parsing."""
@@ -26,7 +20,6 @@ class Transaction(BaseModel):
     amount: float = Field(..., description="Original expense amount")
     ceiling: float = Field(..., description="Amount rounded up to next multiple of 100")
     remanent: float = Field(..., description="ceiling − amount (micro-saving)")
-
 
 class TransactionFlexible(BaseModel):
     """Accepts either 'date' or 'timestamp' as the datetime field."""
@@ -52,13 +45,9 @@ class TransactionFlexible(BaseModel):
             remanent=self.remanent,
         )
 
-
 class InvalidTransaction(Transaction):
     """A transaction that failed validation, with reason."""
     message: str = Field(..., description="Human-readable validation error")
-
-
-# ── Temporal period definitions ───────────────────────────────────────────
 
 class QPeriod(BaseModel):
     """Fixed-amount override period."""
@@ -66,25 +55,21 @@ class QPeriod(BaseModel):
     start: str
     end: str
 
-
 class PPeriod(BaseModel):
     """Extra-amount addition period."""
     extra: float = Field(..., description="Extra amount to add to remanent")
     start: str
     end: str
 
-
 class KPeriod(BaseModel):
     """Evaluation grouping period."""
     start: str
     end: str
 
-
 # ── 1. Transaction Builder  (/transactions:parse) ────────────────────────
 
 class ParseRequest(BaseModel):
     expenses: List[Expense]
-
 
 class ParseResponse(BaseModel):
     transactions: List[Transaction]
@@ -92,18 +77,15 @@ class ParseResponse(BaseModel):
     totalCeiling: float = Field(..., description="Sum of all ceilings")
     totalRemanent: float = Field(..., description="Sum of all remanents")
 
-
 # ── 2. Transaction Validator  (/transactions:validator) ──────────────────
 
 class ValidatorRequest(BaseModel):
     wage: float = Field(..., description="Monthly salary in INR")
     transactions: List[TransactionFlexible]
 
-
 class ValidatorResponse(BaseModel):
     valid: List[Transaction]
     invalid: List[InvalidTransaction]
-
 
 # ── 3. Temporal Constraints Filter  (/transactions:filter) ───────────────
 
@@ -113,16 +95,13 @@ class FilterRequest(BaseModel):
     k: List[KPeriod] = Field(default_factory=list)
     transactions: List[TransactionFlexible]
 
-
 class FilteredTransaction(Transaction):
     """Transaction after q/p adjustments with updated remanent."""
     pass
 
-
 class FilterResponse(BaseModel):
     valid: List[Transaction]
     invalid: List[InvalidTransaction]
-
 
 # ── 4. Returns Calculation  (/returns:nps, /returns:index) ───────────────
 
@@ -135,7 +114,6 @@ class ReturnsRequest(BaseModel):
     k: List[KPeriod] = Field(default_factory=list)
     transactions: List[TransactionFlexible]
 
-
 class SavingsByDate(BaseModel):
     start: str
     end: str
@@ -143,12 +121,10 @@ class SavingsByDate(BaseModel):
     profits: float = Field(..., description="Inflation-adjusted return minus principal")
     taxBenefit: float = Field(0.0, description="Tax benefit (NPS only, 0 for index)")
 
-
 class ReturnsResponse(BaseModel):
     transactionsTotalAmount: float = Field(..., description="Sum of valid transaction amounts")
     transactionsTotalCeiling: float = Field(..., description="Sum of valid transaction ceilings")
     savingsByDates: List[SavingsByDate]
-
 
 # ── 5. Performance Report  (/performance) ────────────────────────────────
 
@@ -156,7 +132,6 @@ class PerformanceResponse(BaseModel):
     time: str = Field(..., description="Uptime or last response time (HH:mm:ss.SSS)")
     memory: str = Field(..., description="Current memory usage (e.g. '123.45 MB')")
     threads: int = Field(..., description="Number of active threads")
-
 
 # ── 6. Monte Carlo Simulation  (/returns:simulate) ──────────────────────
 
@@ -172,12 +147,10 @@ class SimulateRequest(BaseModel):
     rateVariance: float = Field(0.02, ge=0, le=0.10, description="±variance applied to interest rates")
     inflationVariance: float = Field(0.015, ge=0, le=0.10, description="±variance applied to inflation")
 
-
 class PercentileOutcome(BaseModel):
     nps: float = Field(..., description="Inflation-adjusted NPS corpus at this percentile")
     index: float = Field(..., description="Inflation-adjusted Index corpus at this percentile")
     combined: float = Field(..., description="NPS + Index combined")
-
 
 class SimulateResponse(BaseModel):
     simulations: int
@@ -192,7 +165,6 @@ class SimulateResponse(BaseModel):
         ...,
         description="Median profit (real_value − principal) for NPS and Index",
     )
-
 
 # ── 7. Retirement Readiness Score  (/returns:score) ─────────────────────
 
@@ -209,7 +181,6 @@ class ScoreRequest(BaseModel):
         description="Desired monthly expense in retirement (0 = auto-estimate from wage)",
     )
 
-
 class ScoreBreakdown(BaseModel):
     savingsRatio: float = Field(..., description="Remanent-to-income ratio (0-1)")
     yearsToRetirement: int
@@ -218,7 +189,6 @@ class ScoreBreakdown(BaseModel):
     requiredCorpus: float = Field(..., description="Corpus needed for 25-year retirement")
     fundedRatioNps: float = Field(..., description="NPS corpus / required corpus")
     fundedRatioIndex: float = Field(..., description="Index corpus / required corpus")
-
 
 class ScoreResponse(BaseModel):
     score: int = Field(..., ge=0, le=100, description="Retirement readiness 0-100")

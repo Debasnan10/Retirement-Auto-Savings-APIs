@@ -5,12 +5,9 @@
 """
 
 from __future__ import annotations
-
 import json
 import logging
-
 from fastapi import APIRouter, HTTPException
-
 from app.database import get_session
 from app.models.db_models import TransactionAudit
 from app.models.schemas import (
@@ -31,7 +28,6 @@ router = APIRouter(
     prefix="/blackrock/challenge/v1",
     tags=["Transactions"],
 )
-
 
 # ── 1. Transaction Builder ───────────────────────────────────────────────
 
@@ -58,7 +54,6 @@ async def transaction_parse(body: ParseRequest) -> ParseResponse:
     total_ceiling = round_currency(sum(t.ceiling for t in transactions))
     total_remanent = round_currency(sum(t.remanent for t in transactions))
 
-    # Audit persistence (best-effort)
     async with get_session() as session:
         if session is not None:
             audit = TransactionAudit(
@@ -80,7 +75,6 @@ async def transaction_parse(body: ParseRequest) -> ParseResponse:
         totalRemanent=total_remanent,
     )
 
-
 # ── 2. Transaction Validator ─────────────────────────────────────────────
 
 @router.post(
@@ -100,7 +94,6 @@ async def transaction_validator(body: ValidatorRequest) -> ValidatorResponse:
         transactions=body.transactions,
     )
 
-    # Audit persistence
     async with get_session() as session:
         if session is not None:
             audit = TransactionAudit(
@@ -141,7 +134,6 @@ async def transaction_filter(body: FilterRequest) -> FilterResponse:
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc))
 
-    # Audit persistence
     async with get_session() as session:
         if session is not None:
             audit = TransactionAudit(

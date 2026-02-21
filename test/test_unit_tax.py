@@ -13,7 +13,6 @@ from app.services.tax_service import (
     calculate_tax_benefit,
 )
 
-
 class TestCalculateTax:
     """Validate simplified Indian tax slabs."""
 
@@ -52,7 +51,6 @@ class TestCalculateTax:
         """₹8,50,000 → 10% on ₹1,50,000 = ₹15,000."""
         assert calculate_tax(850_000) == 15_000.0
 
-
 class TestCalculateNpsDeduction:
     """Eligible NPS deduction: min(invested, 10% annual_income, ₹2L)."""
 
@@ -67,7 +65,6 @@ class TestCalculateNpsDeduction:
     def test_capped_at_2L(self):
         """Invested=500000, annual=50L → min(500000, 500000, 200000) = 200000."""
         assert calculate_nps_deduction(500_000, 5_000_000) == 200_000
-
 
 class TestCalculateTaxBenefit:
     """Tax benefit = Tax(income) − Tax(income − deduction)."""

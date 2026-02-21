@@ -1,7 +1,4 @@
 # Test type: Integration Test
-# Validation to be executed: End-to-end business logic integration — combines
-#   parsing, temporal processing (q/p/k), and investment return calculations
-#   to verify the full pipeline matches the challenge example output exactly.
 # Command: pytest test/test_integration_pipeline.py -v
 
 """Integration tests that exercise the full business pipeline without HTTP."""
@@ -56,7 +53,7 @@ class TestFullChallengeExample:
         adjusted = apply_temporal_adjustments(parsed, q_periods, [])
         rem = {t.date[:10]: t.remanent for t in adjusted}
         assert rem["2023-07-01"] == 0
-        assert sum(t.remanent for t in adjusted) == 95  # 50+25+0+20
+        assert sum(t.remanent for t in adjusted) == 95 
 
     def test_step3_q_then_p(self, parsed, q_periods, p_periods):
         """Step 3: p period adds 25 to Oct and Dec expenses."""
@@ -136,5 +133,4 @@ class TestEdgeCasePipeline:
             principal=1000, age=60, annual_income=600_000, inflation=0.055
         )
         assert result["amount"] == 1000.0
-        # With 5 years: 1000 * 1.0711^5 ≈ 1410.5 → real ~ 1410.5/1.055^5 ~ 1079
         assert result["profits"] > 0

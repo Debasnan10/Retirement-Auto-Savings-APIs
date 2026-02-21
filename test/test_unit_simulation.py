@@ -13,11 +13,9 @@ from app.services.investment_service import (
     retirement_readiness_score,
 )
 
-
 # ══════════════════════════════════════════════════════════════════════════
 # Monte Carlo Simulation
 # ══════════════════════════════════════════════════════════════════════════
-
 
 class TestMonteCarloSimulate:
     """Tests for monte_carlo_simulate()."""
@@ -134,11 +132,9 @@ class TestMonteCarloSimulate:
         bc = result["bestCase"]
         assert bc["combined"] == pytest.approx(bc["nps"] + bc["index"], abs=0.02)
 
-
 # ══════════════════════════════════════════════════════════════════════════
 # Retirement Readiness Score
 # ══════════════════════════════════════════════════════════════════════════
-
 
 class TestRetirementReadinessScore:
     """Tests for retirement_readiness_score()."""

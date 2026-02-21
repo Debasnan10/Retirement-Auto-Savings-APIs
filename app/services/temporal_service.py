@@ -22,10 +22,8 @@ k – Evaluation Grouping
 """
 
 from __future__ import annotations
-
 from datetime import datetime
 from typing import Dict, List, Tuple
-
 from app.models.schemas import (
     InvalidTransaction,
     KPeriod,
@@ -36,17 +34,14 @@ from app.models.schemas import (
 )
 from app.utils.helpers import normalise_datetime_str, parse_datetime, round_currency
 
-
 # ── Internal helpers ──────────────────────────────────────────────────────
 
 def _parse_period_dt(value: str) -> datetime:
     return parse_datetime(value)
 
-
 def _in_range(dt: datetime, start: datetime, end: datetime) -> bool:
     """Inclusive range check."""
     return start <= dt <= end
-
 
 # ── Q period logic ────────────────────────────────────────────────────────
 
@@ -69,9 +64,7 @@ def _find_applicable_q(
             if best is None or q_start > best_start:
                 best = qp
                 best_start = q_start
-            # If same start → keep first encountered (already set)
     return best
-
 
 # ── P period logic ────────────────────────────────────────────────────────
 
@@ -87,7 +80,6 @@ def _sum_applicable_p_extras(
         if _in_range(txn_dt, p_start, p_end):
             total += pp.extra
     return total
-
 
 # ── Apply q + p adjustments on a list of transactions ─────────────────────
 
@@ -124,7 +116,6 @@ def apply_temporal_adjustments(
         )
     return adjusted
 
-
 # ── K period grouping ─────────────────────────────────────────────────────
 
 def group_by_k_periods(
@@ -153,7 +144,6 @@ def group_by_k_periods(
         })
     return results
 
-
 # ── Filter endpoint logic ────────────────────────────────────────────────
 
 def filter_transactions(
@@ -179,7 +169,7 @@ def filter_transactions(
                 remanent=txn.remanent,
             )
         except ValueError:
-            pass  # will be caught in partition step
+            pass
 
     # Apply q + p
     adjusted = apply_temporal_adjustments(normalised, q_periods, p_periods)
